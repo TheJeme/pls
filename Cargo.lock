@@ -42,13 +42,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "do-cli"
-version = "0.1.0"
-dependencies = [
- "dirs-next",
-]
-
-[[package]]
 name = "getrandom"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -74,6 +67,13 @@ dependencies = [
  "bitflags 2.4.1",
  "libc",
  "redox_syscall",
+]
+
+[[package]]
+name = "pls"
+version = "0.1.0"
+dependencies = [
+ "dirs-next",
 ]
 
 [[package]]

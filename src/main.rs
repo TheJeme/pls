@@ -6,11 +6,11 @@ use std::process::Command;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+    std::fs::create_dir_all(get_pls_path()).unwrap();
     if args.len() < 2 {
         list(&[]);
         return;
     }
-    std::fs::create_dir_all(get_pls_path()).unwrap();
     let command = &args[1];
     let extra_args = &args[2..];
     match command.as_str() {
@@ -146,7 +146,7 @@ fn run(args: &[String]) {
             .output()
             .expect("failed to execute process")
     };
-    println!("{}", String::from_utf8_lossy(&output.stplsut));
+    println!("{}", String::from_utf8_lossy(&output.stdout));
 }
 
 fn list(args: &[String]) {
