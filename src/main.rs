@@ -2,7 +2,7 @@ use std::env;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::Command;
+use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -43,7 +43,7 @@ fn version(args: &[String]) {
 fn help() {
     println!("Commands & Usage:");
     println!("> pls              List all pls");
-    println!("> pls [X]          execute pls");
+    println!("> pls [X]          copy pls");
     println!("> pls add <C>      Add pls");
     println!("> pls delete <X>   Delete pls");
 }
@@ -114,6 +114,8 @@ fn delete(args: &[String]) {
 }
 
 fn run(args: &[String]) {
+    let mut ctx = ClipboardContext::new().unwrap();
+
     if args.len() > 1 || args.is_empty() {
         print_unknown_command("run", &args.join(" "));
         return;
@@ -133,20 +135,8 @@ fn run(args: &[String]) {
         return;
     }
 
-    let file_content = std::fs::read_to_string(get_pls_path().join(format!("{}.txt", file_names[index - 1]))).unwrap();
-    let output = if cfg!(target_os = "windows") {
-        Command::new("cmd")
-            .args(["/C", &file_content])
-            .output()
-            .expect("failed to execute process")
-    } else {
-        Command::new("sh")
-            .arg("-c")
-            .arg(&file_content)
-            .output()
-            .expect("failed to execute process")
-    };
-    println!("{}", String::from_utf8_lossy(&output.stdout));
+    let command_string = std::fs::read_to_string(get_pls_path().join(format!("{}.txt", file_names[index - 1]))).unwrap();
+    ctx.set_contents(command_string).unwrap();
 }
 
 fn list(args: &[String]) {
@@ -157,7 +147,7 @@ fn list(args: &[String]) {
 
     let file_names = get_pls_file_names();
     if file_names.is_empty() {
-        println!("Empty");
+        println!("Empty\nHelp: 'pls help'");
         return;
     }
     for (index, file_name) in file_names.iter().enumerate() {
