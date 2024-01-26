@@ -44,8 +44,8 @@ fn help() {
     println!("Commands & Usage:");
     println!("> pls              List all pls");
     println!("> pls [X]          copy pls");
-    println!("> pls add <C>      Add pls");
-    println!("> pls delete <X>   Delete pls");
+    println!("> pls add [C]      Add pls");
+    println!("> pls delete [X]   Delete pls");
 }
 
 fn print_unknown_command(command: &str, args: &str) {
@@ -136,7 +136,8 @@ fn run(args: &[String]) {
     }
 
     let command_string = std::fs::read_to_string(get_pls_path().join(format!("{}.txt", file_names[index - 1]))).unwrap();
-    ctx.set_contents(command_string).unwrap();
+    ctx.set_contents(command_string.clone()).unwrap();
+    println!("{}", command_string);
 }
 
 fn list(args: &[String]) {
